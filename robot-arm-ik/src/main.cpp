@@ -10,7 +10,9 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "arm/ArmChain.h"
+#include "arm/ArmChain3D.h"
 #include "arm/Kinematics.h"
+#include "arm/Kinematics3D.h"
 #include "arm/Renderer.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -72,6 +74,17 @@ int main() {
     ArmChain solver_chain(joints, 0.f, 0.f);
     Vec2 target = { 150.0f, 100.0f };
 
+    // TEST 3D JOINT 
+    std::vector<Joint3D> joints3d = {
+    { 30.0f * PI / 180.0f, 120.0f, -PI, PI, Eigen::Vector3f(0, 0, 1) },
+    };
+    ArmChain3D chain3d(joints3d, Eigen::Vector3f(0, 0, 0));
+
+    auto positions = Kinematics3D::ComputeJointPositions(chain3d);
+    for (auto const& p : positions) {
+        std::cout << "(" << p.x() << ", " << p.y() << ", " << p.z() << ")\n";
+    }
+
     /* RENDERER */
     Renderer renderer{};
     renderer.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -111,6 +124,7 @@ int main() {
         
         // Sliders
         static float easing_speed = 8.0f; // Easing speed
+        std::vector<bool> manuallyChanged(chain.JointCount(), false); // Track if each joint was manually changed
         // Get each joint
         for (size_t i = 0; i < chain.JointCount(); i++) {
             Joint const& joint = chain.GetJoint(i);
@@ -126,6 +140,7 @@ int main() {
             // Joint angle slider
             if (ImGui::SliderAngle(label.c_str(), &angle, min_angle_deg, max_angle_deg)) {
                 chain.SetJointAngle(i, angle);
+                manuallyChanged[i] = true;
             }
         }
 
@@ -136,10 +151,11 @@ int main() {
         ImGui::DragFloat2("Target", &target.x, 1.0f); // 1.0f = drag sensitivity
         ImGui::End();
 
-        /* DRAW GRID ROBOT ARM AND TARGET */
-        Kinematics::SolveCCD(solver_chain, target, 4, 2.0f);
+        /* DRAW GRID, ROBOT ARM AND TARGET */
+        Kinematics::SolveCCD(solver_chain, target, 20, 0.5f);
 
         for (size_t i = 0; i < chain.JointCount(); i++) {
+            if (manuallyChanged[i]) continue;   // If joint was manually changed, don't conflict with the manual change this frame
             float target_angle = solver_chain.GetJoint(i).angle;
             float current_angle = chain.GetJoint(i).angle;
             float eased = Kinematics::EaseAngle(current_angle, target_angle, easing_speed, dt);

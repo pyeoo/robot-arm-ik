@@ -32,7 +32,7 @@ float Kinematics::EaseAngle(float current_angle, float target_angel, float ease_
 std::vector<Vec2> Kinematics::ComputeJointPositions(ArmChain const& chain) {
 	std::vector<Vec2> joint_positions{};
 	joint_positions.reserve(chain.JointCount() + 1);
-	joint_positions.push_back({ chain.BaseX(), chain.BaseY() });	// Start from base position (push base position into the joints position container)
+	joint_positions.push_back({ chain.BaseX(), chain.BaseY() });	// Start base position (push base position into the joints position container)
 	Vec2 current_pos{}; current_pos.x = chain.BaseX(); current_pos.y = chain.BaseY();	// Store the base position, to be added.
 	float cumulative_angle{};	// Stores cumulative angles
 
@@ -63,7 +63,8 @@ float Kinematics::SolveCCD(ArmChain& chain, Vec2 const target, int max_passes, f
 	for (size_t pass = 1; pass <= max_passes; pass++) {
 		Vec2 current_joint_pos, end_effector_pos;
 		Vec2 to_end_effector, to_target;
-		// Iterate through all joints
+
+		// Iterate through all joints starting from the last
 		for (size_t i = chain.JointCount(); i-- > 0; ) {
 			Joint const& joint = chain.GetJoint(i);
 

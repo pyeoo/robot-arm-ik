@@ -147,13 +147,17 @@
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\ArmChain.cpp" />
+    <ClCompile Include="src\ArmChain3D.cpp" />
     <ClCompile Include="src\Kinematics.cpp" />
+    <ClCompile Include="src\Kinematics3D.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\arm\ArmChain.h" />
+    <ClInclude Include="include\arm\ArmChain3D.h" />
     <ClInclude Include="include\arm\Kinematics.h" />
+    <ClInclude Include="include\arm\Kinematics3D.h" />
     <ClInclude Include="include\arm\Renderer.h" />
   </ItemGroup>
   <ItemGroup>

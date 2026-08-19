@@ -2,9 +2,10 @@
 *
 * File name: Kinematics.h
 *
-* Computes the forward and inverse kinematics 
+* Computes the forward and inverse kinematics in 2D space
 *
 */
+
 #pragma once
 #include <vector>
 #include <cmath>

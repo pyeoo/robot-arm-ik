@@ -6,6 +6,8 @@ C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\external\imgui\imgui_d
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\external\imgui\imgui_tables.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\imgui_tables.obj
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\external\imgui\imgui_widgets.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\imgui_widgets.obj
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\ArmChain.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\ArmChain.obj
+C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\ArmChain3D.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\ArmChain3D.obj
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\Kinematics.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\Kinematics.obj
+C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\Kinematics3D.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\Kinematics3D.obj
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\main.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\main.obj
 C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\src\Renderer.cpp;C:\Users\Pye Oo\For Fun\Holiday\robot-arm-ik\robot-arm-ik\x64\Debug\Renderer.obj
