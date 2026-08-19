@@ -11,14 +11,22 @@
 #include <algorithm>
 
 namespace {
+	// Helper function to compute normalized angle
 	float NormalizeAngle(float angle) {
 		while (angle > 3.14159265f) angle -= 2.0f * 3.14159265f;
 		while (angle < -3.14159265f) angle += 2.0f * 3.14159265f;
 		return angle;
 	}
+
+	// Helper function to compute distance between 2 Vec2 objects
 	float Distance(Vec2 a, Vec2 b) {
 		return std::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y));
 	}
+}
+
+float Kinematics::EaseAngle(float current_angle, float target_angel, float ease_speed, float dt) {
+	float t = 1.0f - std::exp(-ease_speed * dt);
+	return current_angle + NormalizeAngle(target_angel - current_angle) * t;
 }
 
 std::vector<Vec2> Kinematics::ComputeJointPositions(ArmChain const& chain) {

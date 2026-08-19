@@ -23,6 +23,8 @@ int main() {
         return -1;
     }
 
+    float last_time = static_cast<float>(glfwGetTime());    // Get time
+
     constexpr int WINDOW_WIDTH = 1200;
     constexpr int WINDOW_HEIGHT = 800;
 
@@ -67,6 +69,7 @@ int main() {
     };
 
     ArmChain chain(joints, 0.0f, 0.0f);
+    ArmChain solver_chain(joints, 0.f, 0.f);
     Vec2 target = { 150.0f, 100.0f };
 
     /* RENDERER */
@@ -88,6 +91,11 @@ int main() {
             glfwSetWindowShouldClose(window, true);
         }
 
+        // Compute dt
+        float current_time = static_cast<float>(glfwGetTime());
+        float dt = current_time - last_time;
+        last_time = current_time;
+
         // Render stuff
         glClearColor(0.15f, 0.15f, 0.2f, 1.f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -102,6 +110,7 @@ int main() {
         ImGui::Begin("Arm Control");
         
         // Sliders
+        static float easing_speed = 8.0f; // Easing speed
         // Get each joint
         for (size_t i = 0; i < chain.JointCount(); i++) {
             Joint const& joint = chain.GetJoint(i);
@@ -114,16 +123,29 @@ int main() {
 
             // Label
             std::string label = "Joint " + std::to_string(i);
-            // Slider
+            // Joint angle slider
             if (ImGui::SliderAngle(label.c_str(), &angle, min_angle_deg, max_angle_deg)) {
                 chain.SetJointAngle(i, angle);
             }
         }
+
+        // Easing speed slider
+        std::string easing_speed_label = "Easing speed";
+        ImGui::SliderFloat(easing_speed_label.c_str(), &easing_speed, 1.f, 100.f);
+
         ImGui::DragFloat2("Target", &target.x, 1.0f); // 1.0f = drag sensitivity
         ImGui::End();
 
         /* DRAW GRID ROBOT ARM AND TARGET */
-        Kinematics::SolveCCD(chain, target, 4, 2.0f);
+        Kinematics::SolveCCD(solver_chain, target, 4, 2.0f);
+
+        for (size_t i = 0; i < chain.JointCount(); i++) {
+            float target_angle = solver_chain.GetJoint(i).angle;
+            float current_angle = chain.GetJoint(i).angle;
+            float eased = Kinematics::EaseAngle(current_angle, target_angle, easing_speed, dt);
+            chain.SetJointAngle(i, eased);
+        }
+
         std::vector<Vec2> positions = Kinematics::ComputeJointPositions(chain);
         renderer.DrawGrid(400.f, 40.f);
         renderer.DrawArm(positions);

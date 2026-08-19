@@ -45,4 +45,7 @@ namespace Kinematics {
     // between the end effector and the target?" It finds the answer for this question at every joint by "max_passes" times
     // Until the end-effector eventually meets the target
     float SolveCCD(ArmChain& chain, Vec2 const target, int max_passes, float tolerance);
+
+    // Helper function to compute easing 
+    float EaseAngle(float current_angle, float target_angel, float ease_speed, float dt);
 }
