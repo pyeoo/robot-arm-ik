@@ -152,6 +152,7 @@
     <ClCompile Include="src\Kinematics3D.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Renderer3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\arm\ArmChain.h" />
@@ -159,8 +160,11 @@
     <ClInclude Include="include\arm\Kinematics.h" />
     <ClInclude Include="include\arm\Kinematics3D.h" />
     <ClInclude Include="include\arm\Renderer.h" />
+    <ClInclude Include="include\arm\Renderer3D.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="assets\shaders\basic3d.frag" />
+    <None Include="assets\shaders\basic3d.vert" />
     <None Include="assets\shaders\fs.frag" />
     <None Include="assets\shaders\vs.vert" />
   </ItemGroup>

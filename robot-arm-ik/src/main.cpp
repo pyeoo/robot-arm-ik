@@ -14,9 +14,26 @@
 #include "arm/Kinematics.h"
 #include "arm/Kinematics3D.h"
 #include "arm/Renderer.h"
+#include "arm/Renderer3D.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
+
+std::vector<bool> DrawJointSliders3D(ArmChain3D& chain, float PI) {
+    std::vector<bool> manuallyChanged(chain.JointCount(), false);
+    for (size_t i = 0; i < chain.JointCount(); i++) {
+        Joint3D const& joint = chain.GetJoint(i);
+        float angle = joint.angle;
+        float min_deg = joint.min_angle * (180 / PI);
+        float max_deg = joint.max_angle * (180 / PI);
+        std::string label = "Joint " + std::to_string(i);
+        if (ImGui::SliderAngle(label.c_str(), &angle, min_deg, max_deg)) {
+            chain.SetJointAngle(i, angle);
+            manuallyChanged[i] = true;
+        }
+    }
+    return manuallyChanged;
+}
 
 int main() {
     // Initialize GLFW
@@ -61,33 +78,24 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true); // Connects imgui to GLFW window (so that imgui can read opengl inputs)
     ImGui_ImplOpenGL3_Init("#version 330"); // Initialize imgui's render backend for OpenGL
 
-    /* TEST ROBOT ARM */
-    // 3-joint arm: lengths 120, 100, 70. Limits wide open for now (-180 to 180 deg in radians).
     constexpr float PI = 3.14159265f;
-    std::vector<Joint> joints = {
-        { 30.0f * PI / 180.0f, 120.0f, -PI, PI },  
-        { -45.0f * PI / 180.0f, 100.0f, -PI, PI }, 
-        { 60.0f * PI / 180.0f,  70.0f, -PI, PI },  
-    };
 
-    ArmChain chain(joints, 0.0f, 0.0f);
-    ArmChain solver_chain(joints, 0.f, 0.f);
-    Vec2 target = { 150.0f, 100.0f };
-
-    // TEST 3D JOINT 
+    /* TEST 3D ROBOT ARM */
     std::vector<Joint3D> joints3d = {
-    { 30.0f * PI / 180.0f, 120.0f, -PI, PI, Eigen::Vector3f(0, 0, 1) },
+    { 30.0f * PI / 180.0f, 120.0f, -PI, PI, Eigen::Vector3f(0, 0, 1) },  // base, yaw
+    { 40.0f * PI / 180.0f, 100.0f, -PI, PI, Eigen::Vector3f(0, 1, 0) },  // shoulder, pitch around Y
+    { -50.0f * PI / 180.0f, 70.0f, -PI, PI, Eigen::Vector3f(0, 0, 1) },  // elbow, back to Z: perpendicular to local +X, and distinct from joint 1's Y
     };
     ArmChain3D chain3d(joints3d, Eigen::Vector3f(0, 0, 0));
-
-    auto positions = Kinematics3D::ComputeJointPositions(chain3d);
-    for (auto const& p : positions) {
-        std::cout << "(" << p.x() << ", " << p.y() << ", " << p.z() << ")\n";
-    }
+    ArmChain3D solver_chain3d(joints3d, Eigen::Vector3f(0, 0, 0));
+    Eigen::Vector3f target3d(150.0f, -100.0f, 80.0f);
 
     /* RENDERER */
     Renderer renderer{};
     renderer.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    Renderer3D renderer3d{};
+    renderer3d.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     glfwSetWindowUserPointer(window, &renderer);
 
@@ -97,6 +105,8 @@ int main() {
         r->OnResize(width, height);
         });
 
+    // Test view matrix
+    
     // Main Loop
     while (!glfwWindowShouldClose(window)) {
         // Test input (to close window)
@@ -111,7 +121,7 @@ int main() {
 
         // Render stuff
         glClearColor(0.15f, 0.15f, 0.2f, 1.f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         /* DRAW GUI */
         // Start of frame 
@@ -119,54 +129,29 @@ int main() {
         ImGui_ImplGlfw_NewFrame();      // Updates ImGui with GLFW data (e.g. window size, mouse pos, mouse and key inputs)
         ImGui::NewFrame();
 
-        // Build GUI Panel
-        ImGui::Begin("Arm Control");
-        
-        // Sliders
-        static float easing_speed = 8.0f; // Easing speed
-        std::vector<bool> manuallyChanged(chain.JointCount(), false); // Track if each joint was manually changed
-        // Get each joint
-        for (size_t i = 0; i < chain.JointCount(); i++) {
-            Joint const& joint = chain.GetJoint(i);
-
-            // Get angles
-            float angle = joint.angle;      // Can stay radians, as ImGui::SliderAngle allows for radian input
-            // ImGui::SliderAngle still uses degrees for min and max boundaries, so the min and max angle still need to be converted into degrees
-            float min_angle_deg = joint.min_angle * (180 / PI);
-            float max_angle_deg = joint.max_angle * (180 / PI);
-
-            // Label
-            std::string label = "Joint " + std::to_string(i);
-            // Joint angle slider
-            if (ImGui::SliderAngle(label.c_str(), &angle, min_angle_deg, max_angle_deg)) {
-                chain.SetJointAngle(i, angle);
-                manuallyChanged[i] = true;
-            }
-        }
-
-        // Easing speed slider
-        std::string easing_speed_label = "Easing speed";
-        ImGui::SliderFloat(easing_speed_label.c_str(), &easing_speed, 1.f, 100.f);
-
-        ImGui::DragFloat2("Target", &target.x, 1.0f); // 1.0f = drag sensitivity
+        // Build GUI Panel for 3D
+        ImGui::Begin("3D Arm Control");
+        static float easing_speed_3d = 8.0f;
+        auto manuallyChanged3d = DrawJointSliders3D(chain3d, PI);
+        ImGui::SliderFloat("Easing Speed 3D", &easing_speed_3d, 1.f, 100.f);
+        ImGui::DragFloat3("Target 3D", target3d.data(), 1.0f);
         ImGui::End();
 
         /* DRAW GRID, ROBOT ARM AND TARGET */
-        Kinematics::SolveCCD(solver_chain, target, 20, 0.5f);
+        Kinematics3D::SolveCCD_3D(solver_chain3d, target3d, 20, 0.5f);
 
-        for (size_t i = 0; i < chain.JointCount(); i++) {
-            if (manuallyChanged[i]) continue;   // If joint was manually changed, don't conflict with the manual change this frame
-            float target_angle = solver_chain.GetJoint(i).angle;
-            float current_angle = chain.GetJoint(i).angle;
-            float eased = Kinematics::EaseAngle(current_angle, target_angle, easing_speed, dt);
-            chain.SetJointAngle(i, eased);
+        for (size_t i = 0; i < chain3d.JointCount(); i++) {
+            if (manuallyChanged3d[i]) continue;   // If joint was manually changed, don't conflict with the manual change this frame
+            float target_angle = solver_chain3d.GetJoint(i).angle;
+            float current_angle = chain3d.GetJoint(i).angle;
+            float eased = Kinematics::EaseAngle(current_angle, target_angle, easing_speed_3d, dt);
+            chain3d.SetJointAngle(i, eased);
         }
 
-        std::vector<Vec2> positions = Kinematics::ComputeJointPositions(chain);
-        renderer.DrawGrid(400.f, 40.f);
-        renderer.DrawArm(positions);
-        renderer.DrawPoint(target, 0.3f, 1.0f, 0.3f);
-
+        Eigen::Matrix4f targetModel = Kinematics3D::BuildMarkerModelMatrix(target3d, 15.0f);  // target
+        renderer3d.DrawCube(targetModel, 0.3f, 1.0f, 0.3f);  // same green you used for DrawPoint
+        renderer3d.DrawArmBoxes(Kinematics3D::ComputeLinkTransforms(chain3d), 15.0f);
+        
         /* END OF FRAME (Draw the GUI ON TOP of the arm */
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

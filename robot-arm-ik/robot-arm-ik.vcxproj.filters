@@ -57,6 +57,9 @@
     <ClCompile Include="src\Kinematics3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Renderer3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\arm\Kinematics.h">
@@ -74,12 +77,21 @@
     <ClInclude Include="include\arm\Kinematics3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\arm\Renderer3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\fs.frag">
       <Filter>Shader Files</Filter>
     </None>
     <None Include="assets\shaders\vs.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="assets\shaders\basic3d.frag">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="assets\shaders\basic3d.vert">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

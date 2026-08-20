@@ -2,7 +2,7 @@
 *
 * File name: Renderer.cpp
 *
-* Implements functions of Renderer.h
+* Implements Renderer 
 *
 */
 #include <glad/glad.h>
@@ -201,4 +201,8 @@ void Renderer::DrawGrid(float halfExtent, float spacing) {
     glUniform3f(glGetUniformLocation(shaderProgram, "uColor"), 0.25f, 0.28f, 0.27f); // faint, near-background
 
     glDrawArrays(GL_LINES, 0, static_cast<GLint>(gridVerts.size()));
+}
+
+[[maybe_unused]]void Renderer::ShutDown() {
+
 }

@@ -14,7 +14,7 @@ class Renderer {
 public:
     void Init(int window_width, int window_height);
     void OnResize(int width, int height);
-    [[maybe_unused]] void ShutDown();
+    void ShutDown();
 
     void DrawArm(std::vector<Vec2> const& jointPositions);
     void DrawPoint(Vec2 position, float r, float g, float b);
