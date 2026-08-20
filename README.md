@@ -1,4 +1,4 @@
-# Robot F/IK — 2D & 3D Robotic Arm Kinematics Simulator
+# Robot F/IK: 2D & 3D Robotic Arm Kinematics Simulator
 
 A real-time simulator of an articulated robotic arm, built to explore forward and
 inverse kinematics from first principles, first in 2D, then extended into a fully
@@ -90,15 +90,15 @@ The project is split into layers that don't know more about each other than they
 strictly need to, this split was deliberately mirrored between the 2D and 3D
 implementations rather than trying to unify them under one generic system:
 
-- **`ArmChain` / `ArmChain3D`** — pure data. Link lengths, current joint angles,
+- **`ArmChain` / `ArmChain3D`**, pure data. Link lengths, current joint angles,
   joint limits, and (in 3D) each joint's hinge axis. All mutation goes through
   bounds-checked, clamped setters, so invalid state can't be written from anywhere
   else in the codebase.
-- **`Kinematics` / `Kinematics3D`** — pure math. Forward kinematics derives joint
+- **`Kinematics` / `Kinematics3D`**, pure math. Forward kinematics derives joint
   positions from a chain's current angles; `SolveCCD` iteratively adjusts a
   chain's angles to reach a target. Neither touches OpenGL or holds state, both
   are plain, testable transformations of data.
-- **`Renderer` / `Renderer3D`** — pure presentation. Draws whatever it's handed,
+- **`Renderer` / `Renderer3D`**, pure presentation. Draws whatever it's handed,
   points and lines in 2D, lit solid boxes in 3D, with no awareness of kinematics,
   chains, or joints.
 
