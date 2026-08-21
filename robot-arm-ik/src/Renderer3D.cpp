@@ -1,6 +1,6 @@
 /*
 *
-* File name: Renderer.cpp
+* File name: Renderer3D.cpp
 *
 * Implements 3D Renderer
 *
@@ -208,6 +208,11 @@ void Renderer3D::Init(int window_width, int window_height) {
 	
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_PROGRAM_POINT_SIZE);
+}
+
+void Renderer3D::OnResize(int width, int height) {
+	float ar = static_cast<float>(width) / static_cast<float>(height);
+	projection_ = BuildPerspectiveMatrix(45.0f * (PI / 180.0f), ar, 0.1f, 1000.f);
 }
 
 void Renderer3D::DrawArm(std::vector<Eigen::Vector3f> const& jointPositions) {

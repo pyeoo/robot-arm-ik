@@ -7,7 +7,22 @@
 */
 
 #include "arm/Kinematics3D.h"
+#include <cmath>
 #include <iostream>
+
+namespace {
+	// Helper function to compute normalized angle
+	float NormalizeAngle(float angle) {
+		while (angle > 3.14159265f) angle -= 2.0f * 3.14159265f;
+		while (angle < -3.14159265f) angle += 2.0f * 3.14159265f;
+		return angle;
+	}
+}
+
+float Kinematics3D::EaseAngle(float current_angle, float target_angel, float ease_speed, float dt) {
+	float t = 1.0f - std::exp(-ease_speed * dt);
+	return current_angle + NormalizeAngle(target_angel - current_angle) * t;
+}
 
 std::vector<Eigen::Vector3f> Kinematics3D::ComputeJointPositions(ArmChain3D const& chain) {
 	std::vector<Eigen::Vector3f> joint_positions{};

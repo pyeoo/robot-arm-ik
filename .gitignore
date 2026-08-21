@@ -38,9 +38,10 @@ bin/x86/
 obj/x86/
 
 [Ww][Ii][Nn]32/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-[Aa][Rr][Mm]64[Ee][Cc]/
+# Note: the generic ARM/ARM64/ARM64EC build-output ignores from the standard
+# VisualStudio.gitignore template were removed here — this project only
+# targets Win32/x64, and the pattern was silently matching (and un-tracking)
+# the real robot-arm-ik/include/arm/ source folder.
 bld/
 [Oo]bj/
 [Oo]ut/

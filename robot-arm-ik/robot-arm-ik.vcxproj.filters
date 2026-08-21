@@ -21,16 +21,7 @@
     <ClCompile Include="external\glad\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ArmChain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Kinematics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="external\imgui\imgui.cpp">
@@ -62,15 +53,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\arm\Kinematics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\arm\ArmChain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\arm\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\arm\ArmChain3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -82,12 +64,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\fs.frag">
-      <Filter>Shader Files</Filter>
-    </None>
-    <None Include="assets\shaders\vs.vert">
-      <Filter>Shader Files</Filter>
-    </None>
     <None Include="assets\shaders\basic3d.frag">
       <Filter>Shader Files</Filter>
     </None>

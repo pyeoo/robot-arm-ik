@@ -146,27 +146,19 @@
     <ClCompile Include="external\imgui\imgui_draw.cpp" />
     <ClCompile Include="external\imgui\imgui_tables.cpp" />
     <ClCompile Include="external\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="src\ArmChain.cpp" />
     <ClCompile Include="src\ArmChain3D.cpp" />
-    <ClCompile Include="src\Kinematics.cpp" />
     <ClCompile Include="src\Kinematics3D.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Renderer3D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\arm\ArmChain.h" />
     <ClInclude Include="include\arm\ArmChain3D.h" />
-    <ClInclude Include="include\arm\Kinematics.h" />
     <ClInclude Include="include\arm\Kinematics3D.h" />
-    <ClInclude Include="include\arm\Renderer.h" />
     <ClInclude Include="include\arm\Renderer3D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\basic3d.frag" />
     <None Include="assets\shaders\basic3d.vert" />
-    <None Include="assets\shaders\fs.frag" />
-    <None Include="assets\shaders\vs.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,11 +9,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "arm/ArmChain.h"
 #include "arm/ArmChain3D.h"
-#include "arm/Kinematics.h"
 #include "arm/Kinematics3D.h"
-#include "arm/Renderer.h"
 #include "arm/Renderer3D.h"
 #include "imgui.h"
 #include "backends/imgui_impl_glfw.h"
@@ -91,22 +88,19 @@ int main() {
     Eigen::Vector3f target3d(150.0f, -100.0f, 80.0f);
 
     /* RENDERER */
-    Renderer renderer{};
-    renderer.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
-
     Renderer3D renderer3d{};
     renderer3d.Init(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    glfwSetWindowUserPointer(window, &renderer);
+    glfwSetWindowUserPointer(window, &renderer3d);
 
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow* win, int width, int height) {
         glViewport(0, 0, width, height);
-        Renderer* r = static_cast<Renderer*>(glfwGetWindowUserPointer(win));
+        Renderer3D* r = static_cast<Renderer3D*>(glfwGetWindowUserPointer(win));
         r->OnResize(width, height);
         });
 
     // Test view matrix
-    
+
     // Main Loop
     while (!glfwWindowShouldClose(window)) {
         // Test input (to close window)
@@ -144,7 +138,7 @@ int main() {
             if (manuallyChanged3d[i]) continue;   // If joint was manually changed, don't conflict with the manual change this frame
             float target_angle = solver_chain3d.GetJoint(i).angle;
             float current_angle = chain3d.GetJoint(i).angle;
-            float eased = Kinematics::EaseAngle(current_angle, target_angle, easing_speed_3d, dt);
+            float eased = Kinematics3D::EaseAngle(current_angle, target_angle, easing_speed_3d, dt);
             chain3d.SetJointAngle(i, eased);
         }
 
