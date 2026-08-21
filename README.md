@@ -112,7 +112,7 @@ work correctly with no extra bookkeeping.
 - **Eigen** for all 3D linear algebra: quaternions, view/projection matrices, and
   the per-link model matrices used to position and orient each box
 - **Dear ImGui** for live joint-angle sliders and target input
-- Custom GLSL shaders: a perspective pipeline with per-vertex normals,
+- **Custom GLSL shaders**: a perspective pipeline with per-vertex normals,
   distance-based fog, and basic diffuse lighting
 
 ## What I'd extend next
